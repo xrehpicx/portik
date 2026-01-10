@@ -8,15 +8,14 @@ import (
 func Run(args []string) int {
 	if len(args) == 0 {
 		printHelp()
-		return 2
+		return 0
 	}
 	switch args[0] {
 	case "help", "--help", "-h":
 		printHelp()
 		return 0
-	case "version", "--version":
-		fmt.Println("portik v0.2.0")
-		return 0
+	case "version", "--version", "-v":
+		return runVersion()
 	case "who":
 		return runWho(args[1:])
 	case "explain":
@@ -33,6 +32,8 @@ func Run(args []string) int {
 		return runDaemon(args[1:])
 	case "blame":
 		return runBlame(args[1:])
+	case "tui":
+		return runTUI(args[1:])
 
 	// NEW
 	case "scan":
@@ -41,7 +42,6 @@ func Run(args []string) int {
 		return runFree(args[1:])
 	case "reserve":
 		return runReserve(args[1:])
-
 	default:
 		fmt.Fprintf(os.Stderr, "Unknown command: %s\n\n", args[0])
 		printHelp()
@@ -63,9 +63,10 @@ Commands:
   watch <port>      Watch a port and record changes
   history <port>    Show port ownership history (+ pattern detection)
   daemon            Monitor multiple ports and record history (foreground)
-  blame <port>      Process tree + who started this (best-effort)
+	blame <port>      Process tree + who started this (best-effort)
+	tui               Interactive TUI (build tag: tui)
 
-  scan              Scan a set/range of ports and show a table
+	scan              Scan a set/range of ports and show a table
   free              Find a free port (optionally within a range)
   reserve           Reserve a port by binding it for a duration
 

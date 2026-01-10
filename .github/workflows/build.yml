@@ -1,0 +1,52 @@
+name: Build release artifacts
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build binaries
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux, darwin]
+        goarch: [amd64, arm64]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.25.x'
+
+      - name: Determine version and commit
+        run: |
+          VERSION=$(git describe --tags --always --dirty)
+          COMMIT=$(git rev-parse --short HEAD)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "COMMIT=$COMMIT" >> $GITHUB_ENV
+
+      - name: Build
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: 0
+          VERSION: ${{ env.VERSION }}
+          COMMIT: ${{ env.COMMIT }}
+        run: |
+          echo "Building for $GOOS/$GOARCH (version=$VERSION commit=$COMMIT)"
+          mkdir -p dist
+          BIN=portik
+          GOOS=$GOOS GOARCH=$GOARCH CGO_ENABLED=$CGO_ENABLED \
+            go build -ldflags "-X 'portik/internal/cli.version=${VERSION}' -X 'portik/internal/cli.commit=${COMMIT}'" -o $BIN ./cmd/portik
+          TAR=dist/${BIN}_${GOOS}_${GOARCH}_${VERSION}.tar.gz
+          tar -czf $TAR $BIN
+          ls -lh $TAR
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: portik-${{ matrix.goos }}-${{ matrix.goarch }}-${{ env.VERSION }}
+          path: dist/**

@@ -34,14 +34,18 @@ func Run(args []string) int {
 		return runBlame(args[1:])
 	case "tui":
 		return runTUI(args[1:])
-
-	// NEW
 	case "scan":
 		return runScan(args[1:])
 	case "free":
 		return runFree(args[1:])
 	case "reserve":
 		return runReserve(args[1:])
+	case "use":
+    	return runUse(args[1:])
+	case "conn":
+		return runConn(args[1:])
+	case "wait":
+		return runWait(args[1:])
 	default:
 		fmt.Fprintf(os.Stderr, "Unknown command: %s\n\n", args[0])
 		printHelp()
@@ -69,6 +73,9 @@ Commands:
 	scan              Scan a set/range of ports and show a table
   free              Find a free port (optionally within a range)
   reserve           Reserve a port by binding it for a duration
+  use               Run a command with a free PORT selected automatically
+  conn              Show active connections to/from a port (top clients)
+  wait              Wait until a port is listening or becomes free
 
   version           Show version
 

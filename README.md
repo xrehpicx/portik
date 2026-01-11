@@ -114,6 +114,31 @@ portik reserve --bind 0.0.0.0 --for 30s
 
 # JSON output
 portik reserve --for 30s --json
+
+## `use` — run a command on a free port automatically
+
+`portik use` picks a free port (optionally from a range) and runs your command with:
+
+- `PORT=<chosen>` set in the environment
+- optional `{PORT}` template replacement in args (no shell)
+- optional `--shell` mode to allow `$PORT` expansion
+
+### Basic usage
+
+# pick an ephemeral free port and run a command
+portik use -- python -m http.server
+
+# pick a free port from the range 3000-3999
+portik use --ports 3000-3999 -- npm run dev
+
+#If your command accepts a port argument, you can replace {PORT} in args:
+portik use --ports 3000-3999 --template -- python -m http.server {PORT}
+
+#Use this if your command string relies on $PORT expansion (or shell operators):
+portik use --ports 3000-3999 --shell -- sh -lc 'echo "PORT=$PORT"; python -m http.server $PORT'
+
+#UDP mode
+portik use --proto udp --ports 40000-40100 --print
 ```
 
 History is stored at: `~/.portik/history.json`

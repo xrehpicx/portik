@@ -73,15 +73,3 @@ func ScanTableRows(rows ScanRows) string {
 	}
 	return b.String()
 }
-
-func trunc(s string, n int) string {
-	s = strings.ReplaceAll(s, "\n", " ")
-	s = strings.TrimSpace(s)
-	if len(s) <= n {
-		return s
-	}
-	if n <= 1 {
-		return s[:n]
-	}
-	return s[:n-1] + "…"
-}

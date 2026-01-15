@@ -1,5 +1,9 @@
 # portik
 
+<p align="center">
+  <img src="./assets/portik-logo.svg" alt="portik logo" width="640" />
+</p>
+
 portik is a developer-friendly CLI to inspect, explain, and manage port ownership.
 
 It helps answer:
@@ -27,9 +31,6 @@ portik explain 5432
 portik who 5432 --follow --interval 2s
 ```
 
-## Demo
-
-![portik demo](assets/portik-demo.gif)
 
 ## Real problems solved
 
@@ -46,7 +47,7 @@ portik is in active development and is currently **alpha**. Interfaces and outpu
 ### Build from source
 
 ```bash
-git clone https://github.com/<you>/portik
+git clone https://github.com/pratik-anurag/portik
 cd portik
 go build ./cmd/portik
 ./portik --help

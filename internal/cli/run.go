@@ -56,7 +56,7 @@ func Run(args []string) int {
 }
 
 func printHelp() {
-	fmt.Print(`portik — port ownership inspector
+	fmt.Print(`portik — ports i know
 
 Usage:
   portik <command> [args] [flags]

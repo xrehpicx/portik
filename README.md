@@ -14,6 +14,29 @@ Note: resolving sockets → PIDs can require elevated privileges on some systems
 
 ---
 
+## 1-minute quickstart
+
+```bash
+# who owns the port?
+portik who 5432
+
+# why is it stuck?
+portik explain 5432
+
+# follow changes (delta-only)
+portik who 5432 --follow --interval 2s
+```
+
+## Demo
+
+![portik demo](assets/portik-demo.gif)
+
+## Real problems solved
+
+- You restart a service and get "address already in use" → `portik explain` highlights TIME_WAIT or a lingering listener.
+- Your app works on localhost but not from another machine → `portik explain` flags loopback-only binds.
+- A Docker container maps a port and you need to know which one → `portik who --docker` shows the mapping.
+
 ## Project status
 
 portik is in active development and is currently **alpha**. Interfaces and output may change, especially JSON fields. The focus is on correct results over exhaustive platform coverage.
@@ -36,7 +59,7 @@ go build ./cmd/portik
 - macOS: `lsof` and `ps` in `PATH`
 - Optional: `docker` in `PATH` for `--docker` features
 
-## Quickstart
+## Quickstart (more examples)
 
 ```bash
 # who owns the port?

@@ -41,9 +41,11 @@ func Run(args []string) int {
 	case "reserve":
 		return runReserve(args[1:])
 	case "use":
-    	return runUse(args[1:])
+		return runUse(args[1:])
 	case "conn":
 		return runConn(args[1:])
+	case "top":
+		return runTop(args[1:])
 	case "wait":
 		return runWait(args[1:])
 	default:
@@ -75,6 +77,7 @@ Commands:
   reserve           Reserve a port by binding it for a duration
   use               Run a command with a free PORT selected automatically
   conn              Show active connections to/from a port (top clients)
+  top               Top ports by connection count
   wait              Wait until a port is listening or becomes free
 
   version           Show version

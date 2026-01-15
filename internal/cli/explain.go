@@ -42,6 +42,8 @@ func runExplain(args []string) int {
 		return 0
 	}
 
-	fmt.Print(render.Explain(rep, renderOptions(c)))
+	opt := renderOptions(c)
+	opt.RecentOwners = recentOwners(port, c.Proto, 3)
+	fmt.Print(render.Explain(rep, opt))
 	return 0
 }

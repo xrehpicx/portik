@@ -3,6 +3,7 @@ package render
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"portik/internal/model"
 	"portik/internal/proctree"
@@ -10,10 +11,16 @@ import (
 )
 
 type Options struct {
-	Color   bool
-	Summary bool
-	Verbose bool
-	NoHints bool
+	Color        bool
+	Summary      bool
+	Verbose      bool
+	NoHints      bool
+	RecentOwners []OwnerEvent
+}
+
+type OwnerEvent struct {
+	At    time.Time
+	Label string
 }
 
 func Who(rep model.Report, opt Options) string {
@@ -60,6 +67,27 @@ func Who(rep model.Report, opt Options) string {
 				rep.Docker.ContainerID, rep.Docker.ContainerName, dash(rep.Docker.ComposeService), rep.Docker.ContainerPort)
 		} else {
 			fmt.Fprintf(&b, "%s not mapped\n", label("DOCKER", opt))
+		}
+	}
+
+	if len(opt.RecentOwners) > 0 {
+		if opt.Summary {
+			b.WriteString("\n")
+			b.WriteString("  Recent owners: ")
+			for i, e := range opt.RecentOwners {
+				if i > 0 {
+					b.WriteString("; ")
+				}
+				b.WriteString(fmt.Sprintf("%s @ %s", e.Label, e.At.Format("01-02 15:04:05")))
+			}
+			b.WriteString("\n")
+		} else {
+			b.WriteString("\n")
+			b.WriteString(label("RECENT OWNERS", opt))
+			b.WriteString("\n")
+			for _, e := range opt.RecentOwners {
+				b.WriteString(fmt.Sprintf("  %s  %s\n", e.At.Format("01-02 15:04:05"), e.Label))
+			}
 		}
 	}
 

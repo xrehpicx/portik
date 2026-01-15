@@ -4,8 +4,9 @@ import (
 	"os"
 	"strings"
 
-	"golang.org/x/term"
+	"github.com/mattn/go-isatty"
 
+	"portik/internal/history"
 	"portik/internal/render"
 )
 
@@ -29,6 +30,25 @@ func resolveColor(mode string) bool {
 	case "never":
 		return false
 	default:
-		return term.IsTerminal(int(os.Stdout.Fd()))
+		return isatty.IsTerminal(os.Stdout.Fd())
 	}
+}
+
+func recentOwners(port int, proto string, n int) []render.OwnerEvent {
+	s, err := history.Load()
+	if err != nil || s == nil {
+		return nil
+	}
+	evs := s.RecentOwners(port, proto, n)
+	if len(evs) == 0 {
+		return nil
+	}
+	out := make([]render.OwnerEvent, 0, len(evs))
+	for _, e := range evs {
+		out = append(out, render.OwnerEvent{
+			At:    e.At,
+			Label: history.OwnerLabel(e),
+		})
+	}
+	return out
 }

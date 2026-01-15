@@ -60,6 +60,9 @@ portik watch 5432 --interval 10s
 portik history 5432 --since 7d
 portik history 5432 --since 30d --detect-patterns
 
+# follow changes (delta-only)
+portik who 5432 --follow --interval 2s
+
 # daemon (foreground; use nohup/systemd if desired)
 portik daemon --ports 5432,6379 --interval 30s --docker
 
@@ -150,6 +153,9 @@ portik conn 5432 --top 10
 # only ESTABLISHED
 portik conn 5432 --state ESTABLISHED
 
+# top ports by connection count
+portik top --ports 3000-3010 --top 5
+
 # wait until service starts
 portik wait 8080 --listening --timeout 60s
 
@@ -162,7 +168,7 @@ History is stored at: `~/.portik/history.json`
 ## Commands
 
 - `portik who <port>` — show listeners for a port.
-	- Flags: `--proto tcp|udp` (default `tcp`), `--docker`, `--json`
+	- Flags: `--proto tcp|udp` (default `tcp`), `--docker`, `--json`, `--follow`, `--interval`
 
 - `portik explain <port>` — adds diagnostics: port in use, IPv6-only hint, TIME_WAIT sockets, zombie hints, privileged port hints, docker mapping hints.
 
@@ -183,6 +189,9 @@ History is stored at: `~/.portik/history.json`
 
 - `portik blame <port>` — process tree and "who started this" hints.
 	- Flags: `--depth`, `--proto`, `--docker`, `--json`
+
+- `portik top` — top ports by connection count (scan list/range).
+	- Flags: `--ports`, `--top`, `--clients`, `--proto`, `--json`
 
 ## TUI (optional)
 

@@ -172,6 +172,25 @@ func (s *Store) ViewPortSince(port int, cutoff time.Time, detectPatterns bool) V
 	return view
 }
 
+func (s *Store) RecentOwners(port int, proto string, n int) []OwnershipEvent {
+	if n <= 0 {
+		return nil
+	}
+	key := fmt.Sprintf("%d/%s", port, proto)
+	evs := s.Ports[key]
+	if len(evs) == 0 {
+		return nil
+	}
+	if len(evs) <= n {
+		out := make([]OwnershipEvent, len(evs))
+		copy(out, evs)
+		return out
+	}
+	out := make([]OwnershipEvent, n)
+	copy(out, evs[len(evs)-n:])
+	return out
+}
+
 func DetectPatterns(events []OwnershipEvent) []Pattern {
 	// Simple heuristics:
 	// - if most events cluster around an hour-of-day → "morning pattern around 09:00"
@@ -191,7 +210,7 @@ func DetectPatterns(events []OwnershipEvent) []Pattern {
 		hourCount[h]++
 		dowCount[d]++
 
-		lbl := ownerLabel(e)
+		lbl := OwnerLabel(e)
 		if ownerHour[h] == nil {
 			ownerHour[h] = map[string]int{}
 		}
@@ -278,7 +297,7 @@ func weekdayName(d int) string {
 func topOwners(events []OwnershipEvent) []TopOwner {
 	counts := map[string]int{}
 	for _, e := range events {
-		counts[ownerLabel(e)]++
+		counts[OwnerLabel(e)]++
 	}
 	var tops []TopOwner
 	for k, v := range counts {
@@ -291,7 +310,7 @@ func topOwners(events []OwnershipEvent) []TopOwner {
 	return tops
 }
 
-func ownerLabel(e OwnershipEvent) string {
+func OwnerLabel(e OwnershipEvent) string {
 	if e.DockerMapped {
 		l := fmt.Sprintf("docker:%s", e.ContainerName)
 		if e.ComposeService != "" {
@@ -340,7 +359,7 @@ func RenderView(v View) string {
 
 	b.WriteString("Events\n")
 	for _, e := range v.Events {
-		fmt.Fprintf(&b, "%s  %s\n", e.At.Format(time.RFC3339), ownerLabel(e))
+		fmt.Fprintf(&b, "%s  %s\n", e.At.Format(time.RFC3339), OwnerLabel(e))
 		if e.Cmdline != "" {
 			fmt.Fprintf(&b, "  cmd: %s\n", e.Cmdline)
 		}

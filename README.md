@@ -36,9 +36,9 @@ portik who 5432 --follow --interval 2s
 
 ## Real problems solved
 
-- You restart a service and get "address already in use" → `portik explain` highlights TIME_WAIT or a lingering listener.
-- Your app works on localhost but not from another machine → `portik explain` flags loopback-only binds.
-- A Docker container maps a port and you need to know which one → `portik who --docker` shows the mapping.
+- Restarted a service and hit “address already in use”? `portik explain` will show TIME_WAIT sockets, zombie listeners, or other hardware hints.
+- App listens only on `127.0.0.1` and refuses remote traffic? The loopback/literal binding warning explains why and how to fix it.
+- Docker port conflict? `portik who --docker` shows the container name/ID and the service that owns the port.
 
 ## Project status
 

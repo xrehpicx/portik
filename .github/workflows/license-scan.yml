@@ -1,0 +1,16 @@
+name: license-scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Feluda License Scanner
+        uses: anistark/feluda@v1.11.0

@@ -1,5 +1,7 @@
 # portik
 
+![license-scan](https://github.com/pratikanurag/portik/actions/workflows/license-scan.yml/badge.svg)
+
 <p align="center">
   <img src="./assets/portik-logo.svg" alt="portik logo" width="640" />
 </p>

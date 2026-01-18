@@ -1,6 +1,6 @@
 # portik
 
-[![ci](https://github.com/pratik-anurag/portik/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/pratik-anurag/portik/actions/workflows/ci.yml)
+[![ci](../../actions/workflows/ci.yml/badge.svg)](../../actions/workflows/ci.yml)
 
 
 
